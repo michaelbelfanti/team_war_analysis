@@ -1,0 +1,1 @@
+A project for the 2018 python bootcamp. The goal is to look at team WAR and team position WAR and the effect on team wins.
