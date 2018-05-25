@@ -37,22 +37,30 @@ def add_team(df):
     df_with_teams.insert(loc = 0, column = 'Team', value = teams_list)
     return df_with_teams
 
-# Add a 'Year' column
-def add_year(df):
-    df_with_year = df.copy()
-    year = [data[10:14]]
-    year_list = len(df)*year
-    df_with_year.insert(loc = 1, column = 'Year', value = year_list) 
-    return df_with_year
+
+# Extract digits
+def extract_digits(str):
+    digits = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    str_digits =''
+    for character in str:
+        if character in digits:
+            str_digits += character
+    return str_digits
+
+# Add year
+def add_year(df1, str):
+    year = extract_digits(str)
+    year_list = len(df1)*[year+'0']
+    df1.insert(loc = 1, column = 'Year', value = year_list)
+    return df1
 
 # Clean the individual entries
 def remove_teams_from_entries(df):
-    df_with_no_teams = df.copy()
-    numeric_columns = list(df.columns)[2:]
+    numeric_columns = list(df.columns)[1:]
     for column in numeric_columns:
         for i in range(0,len(df)):
-            df_with_no_teams[column][i] = float(df[column][i][3:])
-    return df_with_no_teams
+            df[column][i] = float(extract_digits(df[column][i]))
+    return df
 
 # Add a column for actual wins
 def add_wins(war_df, standings_df):
@@ -83,6 +91,7 @@ def rename_columns(df):
     df.columns = columns
     return df 
 
+"""
 data = sys.argv[1]
 wins_data = sys.argv[2]
 wins_df = pd.read_csv(wins_data)
@@ -91,11 +100,12 @@ season_df = drop_rank(season_df)
 season_df = drop_final_row(season_df)
 season_df = sort_columns(season_df)
 season_df = add_team(season_df)
-season_df = add_year(season_df)
+season_df = add_year(season_df, wins_data)
 season_df = remove_teams_from_entries(season_df)
 season_df = add_wins(season_df,wins_df)
 season_df = rename_columns(season_df)
 print(season_df.head())
+"""
 
 def process_season(br_war_data, br_standings_data):
     war_df = read_season_as_dataframe(br_war_data)
@@ -104,7 +114,7 @@ def process_season(br_war_data, br_standings_data):
     war_df = drop_final_row(war_df)
     war_df = sort_columns(war_df)
     war_df = add_team(war_df)
-    war_df = add_year(war_df)
+    war_df = add_year(war_df,br_standings_data)
     war_df = remove_teams_from_entries(war_df)
     war_df = add_wins(war_df,standings_df)
     war_df = rename_columns(war_df)
