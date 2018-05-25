@@ -40,17 +40,18 @@ def add_team(df):
 
 # Extract digits
 def extract_digits(str):
-    digits = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    digits = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-']
     str_digits =''
     for character in str:
         if character in digits:
             str_digits += character
+    str_digits = str_digits.strip('.')
     return str_digits
 
 # Add year
 def add_year(df1, str):
     year = extract_digits(str)
-    year_list = len(df1)*[year+'0']
+    year_list = len(df1)*[year]
     df1.insert(loc = 1, column = 'Year', value = year_list)
     return df1
 
@@ -108,7 +109,7 @@ print(season_df.head())
 """
 
 def process_season(br_war_data, br_standings_data):
-    war_df = read_season_as_dataframe(br_war_data)
+    war_df = pd.read_csv(br_war_data)
     standings_df = pd.read_csv(br_standings_data)
     war_df = drop_rank(war_df)
     war_df = drop_final_row(war_df)
