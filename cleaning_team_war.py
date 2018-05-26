@@ -1,5 +1,6 @@
 import pandas as pd
 import sys
+import os
 
 # Read in the csv file as a dataframe. Accepts the string which is the path to the data file.
 def read_season_as_dataframe(br_data):
@@ -107,7 +108,7 @@ season_df = add_wins(season_df,wins_df)
 season_df = rename_columns(season_df)
 print(season_df.head())
 """
-
+# Process data for one season
 def process_season(br_war_data, br_standings_data):
     war_df = pd.read_csv(br_war_data)
     standings_df = pd.read_csv(br_standings_data)
@@ -119,8 +120,22 @@ def process_season(br_war_data, br_standings_data):
     war_df = remove_teams_from_entries(war_df)
     war_df = add_wins(war_df,standings_df)
     war_df = rename_columns(war_df)
-
+    
     return war_df
+
+# Process and combine multiple seasons in a file
+def combine_seasons(war_data_directory, standings_data_directory):
+    war_data_list = os.listdir(war_data_directory)
+    standings_data_list = os.listdir(standings_data_directory)
+    season_dfs = []
+    for i in range(0,len(war_data_list)):
+        war_file = os.path.join(war_data_directory, war_data_list[i])
+        standings_file = os.path.join(standings_data_directory, standings_data_list[i])
+        season_df = process_season(war_file, standings_file)
+        season_dfs += [season_df]
+    return pd.concat(season_dfs, ignore_index = True)
+
+
 
 
 
