@@ -134,9 +134,3 @@ def combine_seasons(war_data_directory, standings_data_directory):
         season_df = process_season(war_file, standings_file)
         season_dfs += [season_df]
     return pd.concat(season_dfs, ignore_index = True)
-
-
-
-
-
-
