@@ -71,7 +71,7 @@ def add_wins(war_df, standings_df):
         team = standings_df['Tm'][i]
         league = standings_df['Lg'][i]
         wins = float(standings_df['W'][i])
-        if league == 'NL':
+        if league == 'AL':
             team_wins += [(team,wins)]
     team_wins = sorted(team_wins)
 
